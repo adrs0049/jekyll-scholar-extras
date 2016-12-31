@@ -9,13 +9,15 @@ module Jekyll
         super
 
         @config = Scholar.defaults.dup
-        
+
         optparse(arguments)
       end
 
       def initialize_type_labels()
         @type_labels =
           Hash[{ "@article" => "Journal Articles",
+                 "@article[status==review]" => "Journal Articles",
+                 "@article[status!=review]" => "Preprints",
                  "@inproceedings" => "Conference and Workshop Papers",
                  "@incollection" => "Book Chapters",
                  "@techreport" => "Technical Reports",
@@ -31,7 +33,7 @@ module Jekyll
       def render_index(item, ref)
         si = '[' + @prefix_defaults[item.type].to_s + @type_counts.to_s + ']'
         @type_counts = @type_counts - 1
-        
+
         idx_html = content_tag "div class=\"csl-index\"", si
         return idx_html + ref
       end
@@ -49,6 +51,11 @@ module Jekyll
 
         initialize_prefix_defaults()
         initialize_type_labels()
+
+        if items.size() <= 0
+            return
+        end
+
         set_type_counts(items.size())
 
         if cited_only?
@@ -80,9 +87,9 @@ module Jekyll
             reference_position = reference.rindex('</div>')
             if reference_position.nil?
               puts "NILL"
-            else 
+            else
               reference.insert(reference.rindex('</div>'), ts.to_s)
-            end 
+            end
           end
 
           # Check if there are ACM PDF links
@@ -101,11 +108,11 @@ module Jekyll
               link = repository_slides_link_for(entry)
               if link.to_s.include?("_slides")
                 pdflink = "<div class=\"pure-button csl-slides\"><a href=\"" + repository_slides_link_for(entry) + "\">SLIDES</a></div>"
-                reference.insert(reference.rindex('</div>'), pdflink.to_s )                      
+                reference.insert(reference.rindex('</div>'), pdflink.to_s )
               end
             end
 
-            
+
           end
 
           content_tag config['bibliography_item_tag'], reference
@@ -114,7 +121,7 @@ module Jekyll
 
 
         content_tag config['bibliography_list_tag'], bibliography, :class => config['bibliography_class']
-        
+
       end
     end
 
