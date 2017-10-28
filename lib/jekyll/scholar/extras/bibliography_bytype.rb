@@ -16,7 +16,7 @@ module Jekyll
       def initialize_type_labels()
         @type_labels =
           Hash[{ "@article" => "Journal Articles",
-                 "@article[status==review]" => "Journal Articles",
+                 "@article[status=review]" => "Journal Articles",
                  "@article[status!=review]" => "Preprints",
                  "@inproceedings" => "Conference and Workshop Papers",
                  "@incollection" => "Book Chapters",
@@ -41,6 +41,7 @@ module Jekyll
       def render_header(y)
         ys = content_tag "h2 class=\"csl-year-header\"", y
         ys = content_tag "div class=\"csl-year-icon\"", ys
+        print(y)
       end
 
       def render(context)
