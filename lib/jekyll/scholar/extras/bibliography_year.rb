@@ -1,20 +1,20 @@
 module Jekyll
   class Scholar
-    
+
     class BibliographyTagYear < Liquid::Tag
       include Scholar::Utilities
-      include ScholarExtras
+      include ScholarExtras::Utilities
 
       def initialize(tag_name, arguments, tokens)
         super
 
         @config = Scholar.defaults.dup
-        @config_extras = ScholarExtras.extra_defaults.dup        
+        @config_extras = ScholarExtras.extra_defaults.dup
 
         puts @config_extras
 
         puts @config_extras['parse_extra_fields']
-        
+
         optparse(arguments)
 
       end
@@ -58,7 +58,7 @@ module Jekyll
 
 
       def entries_year(year)
-        b = bibliography.query('@*') { 
+        b = bibliography.query('@*') {
           |a| (a.year == year && a.public == 'yes')
         }
       end
@@ -87,7 +87,7 @@ module Jekyll
           @type_order.keys.each { |o|
             items = entries_year(y).select { |e| e.type == o }
             bibliography << items.each_with_index.map { |entry, index|
-              if entry.type == o then 
+              if entry.type == o then
                 reference = render_index(entry, bibliography_tag(entry, nil))
 
                 if entry.field?(extra_parse_fields['award'])
@@ -96,8 +96,8 @@ module Jekyll
                   puts entry.award
                   ts = content_tag "div class=\"csl-award\"", entry.award.to_s
                   reference_position = reference.rindex('</div>')
-                  if reference_position.nil? 
-                  else 
+                  if reference_position.nil?
+                  else
                     reference.insert( reference.rindex('</div>'), ts.to_s )
                   end
                 end
@@ -114,7 +114,7 @@ module Jekyll
                 reference.insert(position.to_i,render_acmpdf_link(entry))
 
                 # Render links if repository specified but not acmpdflink
-                if repository? && !entry.field?(:acmpdflink) 
+                if repository? && !entry.field?(:acmpdflink)
                   if not repository_link_for(entry).nil?
 #                    puts "link is not null"
 #                    puts repository_link_for(entry)
@@ -128,20 +128,20 @@ module Jekyll
 #                    puts link.to_s
                     if link.to_s.include?(@config_extras['slides'])
                       pdflink = "<div class=\"pure-button csl-slides\"><a href=\"" + repository_slides_link_for(entry) + "\">SLIDES</a></div>"
-                      reference.insert(reference.rindex('</div>'), pdflink.to_s )                      
+                      reference.insert(reference.rindex('</div>'), pdflink.to_s )
                     end
                   end
-                  
+
                 end
 
                 # Content tag is dependent on type of article.
                 content_tag "li class=\"" + render_ref_img(entry) + "\"", reference
               end
-#              split_reference reference                                    
+#              split_reference reference
             }.join("\n")
 
           }.join("\n")
-          
+
 
         }.join("")
         return content_tag config['bibliography_list_tag'], bibliography, :class => config['bibliography_class']

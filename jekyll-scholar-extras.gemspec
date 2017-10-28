@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
   s.description = %q{
     Extras for jekyll-scholar.  Customized bibliography and details generators.
   }.gsub(/\s+/, ' ')
-  
+
   s.date        = Time.now
 
   s.required_rubygems_version = '>= 1.3.6'
@@ -31,7 +31,7 @@ Gem::Specification.new do |s|
   s.test_files   = `git ls-files -- {samples,test,spec,features}/*`.split("\n")
   s.executables  = []
   s.require_path = 'lib'
-  
+
 end
 
 # vim: syntax=ruby

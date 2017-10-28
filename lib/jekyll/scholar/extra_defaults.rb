@@ -1,5 +1,5 @@
 module Jekyll
-  module ScholarExtras
+  class ScholarExtras
     @extra_defaults = {
       'slides'                 => '_slides',
       'parse_extra_fields' => {
