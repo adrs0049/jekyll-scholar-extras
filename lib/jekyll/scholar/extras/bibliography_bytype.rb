@@ -73,6 +73,7 @@ module Jekyll
 
         items = items[offset..max] if limit_entries?
 
+        print "\nQuery:", query, "  Type:", @type_labels[query]
         bibliography = render_header(@type_labels[query])
         bibliography << items.each_with_index.map { |entry, index|
           reference = render_index(entry, bibliography_tag(entry, nil))
